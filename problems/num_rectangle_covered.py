@@ -16,7 +16,9 @@ for i in range(m_len * n_len):
 
 
 def visual_print(arr):
-    p_matrix = [[0] * (2 * n_len + 1)] * (2 * m_len + 1)
+    p_matrix = []
+    for i in range(m_len * 2 + 1):
+        p_matrix.append([0]*(2*n_len +1))
 
     for i, v in enumerate(arr):
         x , y = i // n_len * 2+ 1, i % n_len * 2+ 1
