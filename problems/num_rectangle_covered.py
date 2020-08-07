@@ -2,8 +2,8 @@
 # this is a algorithm computes number of way to cover a m_len * n_len rectangle
 # by arbitrary smaller rectagle
 
-m_len = 4
-n_len = 3
+m_len = 3
+n_len = 4
 valid = []
 for i in range(m_len * n_len):
     valid.append([1])
@@ -13,6 +13,50 @@ for i in range(m_len * n_len):
         valid[i].append(3)
     if i >= n_len and i % n_len != 0:
         valid[i].append(4)
+
+def leagal(pos, left, up, value):
+    if value == 1 and  up in [2, 4] and left in [3 ,4]:
+        return False;
+    if value == 2 and left in [4 ,3]:
+        return False;
+    if value == 3 and  up in [4, 2]:
+        return False;
+    if value == 4:
+        if up == 4 and left ==4 or up == 2 and left ==4:
+            return True
+        if up == 2 and left ==3 or up == 4 and left ==3:
+            return True
+        return False
+    return True
+
+def dfs(pos, arr):
+    if pos == m_len * n_len:
+        return 1
+    count = 0
+    for i in range(1, 5):
+        if i not in valid[pos]:
+            continue
+        if pos >= n_len and pos % n_len != 0:
+            left = arr[pos - 1]
+            up = arr[pos - n_len]
+            if not leagal(pos, left ,up, i):
+                continue
+        newarr = arr[:]
+        newarr[pos] = i
+        count += dfs(pos + 1, newarr)
+    return count
+
+arr = [0] * m_len * n_len
+arr[0] = 1
+print(dfs(1, arr))
+
+def print_arr(arr):
+    for i in range(m_len):
+        for j in range(n_len) :
+            print(arr[i*n_len+j], end=" ")
+        print()
+    print()
+
 
 
 def visual_print(arr):
@@ -44,50 +88,3 @@ def visual_print(arr):
                 print(p_matrix[i][j]*3, end="")
             print(p_matrix[i][j], end="")
         print()
-
-def leagal(pos, left, up, value):
-    if value == 1 and  up in [2, 4] and left in [3 ,4]:
-        return False;
-    if value == 2 and left in [4 ,3]:
-        return False;
-    if value == 3 and  up in [4, 2]:
-        return False;
-    if value == 4:
-        if up == 4 and left ==4:
-            return True
-        elif up == 2 and pos < n_len * 2 and left != 1 and left!=2:
-            return True
-        elif left ==3 and (pos-1) % n_len == 0 and up != 3 and up!= 1:
-            return True
-        return False
-    return True
-
-def dfs(pos, arr):
-    if pos == m_len * n_len:
-        # visual_print(arr)
-        return 1
-    count = 0
-    for i in range(1, 5):
-        if i not in valid[pos]:
-            continue
-        if pos >= n_len and pos % n_len != 0:
-            left = arr[pos - 1]
-            up = arr[pos - n_len]
-            if not leagal(pos, left ,up, i):
-                continue
-        newarr = arr[:]
-        newarr[pos] = i
-        count += dfs(pos + 1, newarr)
-    return count
-
-arr = [0] * m_len * n_len
-arr[0] = 1
-print(dfs(1, arr))
-
-def print_arr(arr):
-    for i in range(m_len):
-        for j in range(n_len) :
-            print(arr[i*n_len+j], end=" ")
-        print()
-    print()
-
