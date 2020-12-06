@@ -11,13 +11,15 @@ struct TrieNode {
 impl TrieNode {
     fn match_string(&self, word: &str) -> bool{
         let b = word.as_bytes();
-        let mut rf = self.next.clone();
+        unsafe{
+        let mut rf: *const TrieNode = self;
         for c in b.iter(){
-            if !rf.contains_key(c){
+            if !(*rf).next.contains_key(c){
                 return false;
             }
-            let tmp = rf[c].borrow().next.clone();
+            let tmp: *const TrieNode = &(*(*rf).next[c].borrow());
             rf = tmp;
+        }
         }
         return true;
     }
